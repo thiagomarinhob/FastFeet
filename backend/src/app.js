@@ -3,9 +3,24 @@ import routes from './routes';
 
 import './database';
 
-const app = express();
+class App {
+    constructor() {
+        this.server = express()
 
-app.use(express.json());
-app.use(routes);
+        this.middleware()
+        this.routes();
 
-export default app;
+    }
+
+    middleware() {
+        this.server.use(express.json())
+    }
+
+    routes() {
+        this.server.use(routes)
+    }
+}
+
+
+
+export default new App().server;
