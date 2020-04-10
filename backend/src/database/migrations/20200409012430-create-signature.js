@@ -1,6 +1,6 @@
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable('files', {
+        return queryInterface.createTable('signatures', {
             id: {
                 type: Sequelize.INTEGER,
                 autoIncrement: true,
@@ -14,7 +14,6 @@ module.exports = {
             path: {
                 type: Sequelize.STRING,
                 allowNull: false,
-                unique: true,
             },
             created_at: {
                 type: Sequelize.DATE,
@@ -28,6 +27,6 @@ module.exports = {
     },
 
     down: (queryInterface) => {
-        return queryInterface.dropTable('files');
+        return queryInterface.dropTable('signatures');
     },
 };

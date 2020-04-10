@@ -1,10 +1,10 @@
-import File from '../models/File';
+import Signature from '../models/Signature';
 
 export default {
     async store(req, res) {
         const { originalname: name, filename: path } = req.file;
 
-        const file = await File.create({
+        const file = await Signature.create({
             name,
             path,
         });

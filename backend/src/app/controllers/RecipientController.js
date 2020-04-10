@@ -1,15 +1,15 @@
+import * as Yup from 'yup';
 import Recipient from '../models/Recipient';
-import * as Yup from 'yup'
 
 export default {
     async index(req, res) {
-        const response = await Recipient.findAll()
+        const response = await Recipient.findAll();
 
-        if(response){
-            return res.json(response)
+        if (response) {
+            return res.json(response);
         }
 
-        return res.status(400).json({  error: 'Lista Vazia'});
+        return res.status(400).json({ error: 'Lista Vazia' });
     },
     async store(req, res) {
         const schema = Yup.object().shape({
@@ -20,12 +20,11 @@ export default {
             state: Yup.string().required(),
             city: Yup.string().required(),
             zip_code: Yup.string().required().length(8),
-        })
+        });
 
-        if(!(await schema.isValid(req.body))) {
-            return res.status().json({ error: 'Falha na Validação' })
+        if (!(await schema.isValid(req.body))) {
+            return res.status().json({ error: 'Falha na Validação' });
         }
-
 
         const recipient = await Recipient.findOne({
             where: {
@@ -59,15 +58,15 @@ export default {
             state: Yup.string(),
             city: Yup.string(),
             zip_code: Yup.string().length(8),
-        })
+        });
 
-        if(!(await schema.isValid(req.body))){
-            return res.status(400).json({ error: 'Falha na Validação'  })
+        if (!(await schema.isValid(req.body))) {
+            return res.status(400).json({ error: 'Falha na Validação' });
         }
 
         const recipient = await Recipient.findByPk(req.params.id);
 
-        if(recipient){
+        if (recipient) {
             const {
                 name,
                 street,
@@ -75,8 +74,8 @@ export default {
                 complement,
                 state,
                 city,
-                zip_code
-            } = await recipient.update(req.body)
+                zip_code,
+            } = await recipient.update(req.body);
             return res.json({
                 name,
                 street,
@@ -84,11 +83,10 @@ export default {
                 complement,
                 state,
                 city,
-                zip_code
-            })
+                zip_code,
+            });
         }
 
-        return res.status(400).json({ error: 'Destinatário não encontrado'})
-
-    }
+        return res.status(400).json({ error: 'Destinatário não encontrado' });
+    },
 };
