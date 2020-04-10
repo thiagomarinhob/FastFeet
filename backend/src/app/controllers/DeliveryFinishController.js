@@ -1,8 +1,8 @@
-import Order from '../models/Order';
+import Delivery from '../models/Delivery';
 import Deliveryman from '../models/Deliveryman';
-import Signature from '../models/Signature';
+import File from '../models/File';
 
-export default {
+class DeliveryFinish {
     async store(req, res) {
         const { signature_id } = req.body;
 
@@ -12,25 +12,26 @@ export default {
             return res.status(400).json({ error: 'Entregador não encontrado' });
         }
 
-        const existOrder = await Order.findOne({
+        const existDelivery = await Delivery.findOne({
             where: {
-                id: req.params.orderId,
+                id: req.params.deliveryId,
                 end_date: null,
             },
         });
 
-        if (!existOrder) {
+        if (!existDelivery) {
             return res.status(400).json({ error: 'Encomenda não encontrada!' });
         }
 
-        const existSign = await Signature.findByPk(signature_id);
+        const existSign = await File.findByPk(signature_id);
 
         if (!existSign) {
             return res.status(400).json({ error: 'Assinatura não enontrada!' });
         }
 
-        await existOrder.update(req.body);
+        await existDelivery.update(req.body);
 
-        return res.json(existOrder);
-    },
-};
+        return res.json(existDelivery);
+    }
+}
+export default new DeliveryFinish();

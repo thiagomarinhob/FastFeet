@@ -1,16 +1,16 @@
 import * as Yup from 'yup';
 import Recipient from '../models/Recipient';
 
-export default {
+class RecipientController {
     async index(req, res) {
         const response = await Recipient.findAll();
 
-        if (response) {
-            return res.json(response);
+        if (!response) {
+            return res.status(400).json({ error: 'Lista Vazia' });
         }
+        return res.json(response);
+    }
 
-        return res.status(400).json({ error: 'Lista Vazia' });
-    },
     async store(req, res) {
         const schema = Yup.object().shape({
             name: Yup.string().required(),
@@ -26,12 +26,22 @@ export default {
             return res.status().json({ error: 'Falha na Validação' });
         }
 
+        const {
+            name,
+            number,
+            complement,
+            street,
+            state,
+            city,
+            zip_code,
+        } = req.body;
+
         const recipient = await Recipient.findOne({
             where: {
-                name: req.body.name,
-                street: req.body.street,
-                number: req.body.number,
-                city: req.body.city,
+                name,
+                street,
+                number,
+                city,
             },
         });
 
@@ -41,10 +51,18 @@ export default {
                 .json({ error: 'Destinatário já cadastrado' });
         }
 
-        const response = await Recipient.create(req.body);
+        const response = await Recipient.create({
+            name,
+            number,
+            complement,
+            street,
+            state,
+            city,
+            zip_code,
+        });
 
         return res.json(response);
-    },
+    }
 
     async update(req, res) {
         req.body.id = req.params.id;
@@ -66,27 +84,16 @@ export default {
 
         const recipient = await Recipient.findByPk(req.params.id);
 
-        if (recipient) {
-            const {
-                name,
-                street,
-                number,
-                complement,
-                state,
-                city,
-                zip_code,
-            } = await recipient.update(req.body);
-            return res.json({
-                name,
-                street,
-                number,
-                complement,
-                state,
-                city,
-                zip_code,
-            });
+        if (!recipient) {
+            return res
+                .status(400)
+                .json({ error: 'Destinatário não encontrado' });
         }
 
-        return res.status(400).json({ error: 'Destinatário não encontrado' });
-    },
-};
+        const response = await recipient.update(req.body);
+
+        return res.json(response);
+    }
+}
+
+export default new RecipientController();

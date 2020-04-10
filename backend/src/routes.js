@@ -7,14 +7,13 @@ import UserController from './app/controllers/UserController';
 import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
 import DeliverymanController from './app/controllers/DeliverymanController';
-import SignatureController from './app/controllers/SignatureController';
-import OrderController from './app/controllers/OrderController';
-import OrderPendingController from './app/controllers/OrderPendingController';
-import OrderCompletedController from './app/controllers/OrderCompletedController';
-import StartOrderController from './app/controllers/StartOrderController';
+import DeliveryController from './app/controllers/DeliveryController';
+import DeliveryPendingController from './app/controllers/DeliveryPendingController';
+import DeliveryCompletedController from './app/controllers/DeliveryCompletedController';
+import DeliveryStartController from './app/controllers/DeliveryStartController';
+import DeliveryFinishController from './app/controllers/DeliveryFinishController';
 
 import authMiddleware from './app/middleware/auth';
-import EndOrderController from './app/controllers/EndOrderController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -22,20 +21,20 @@ const upload = multer(multerConfig);
 routes.get('/users', UserController.index);
 routes.post('/sessions', SessionController.store);
 
-routes.get('/deliverymans/:id', OrderPendingController.index);
-routes.get('/deliverymans/:id/deliveries', OrderCompletedController.index);
+routes.get('/deliverymans/:id', DeliveryPendingController.index);
+routes.get('/deliverymans/:id/deliveries', DeliveryCompletedController.index);
 
 routes.post(
-    '/deliverymans/:id/deliveries/:orderId/start',
-    StartOrderController.store
+    '/deliverymans/:id/deliveries/:deliveryId/start',
+    DeliveryStartController.store
 );
 
 routes.post(
-    '/deliverymans/:id/deliveries/:orderId/end',
-    EndOrderController.store
+    '/deliverymans/:id/deliveries/:deliveryId/end',
+    DeliveryFinishController.store
 );
 
-routes.post('/signatures', upload.single('file'), SignatureController.store);
+routes.post('/files', upload.single('file'), FileController.store);
 
 routes.use(authMiddleware);
 
@@ -48,11 +47,9 @@ routes.put('/deliverymans/:id', DeliverymanController.update);
 routes.get('/deliverymans', DeliverymanController.index);
 routes.delete('/deliverymans/:id', DeliverymanController.delete);
 
-routes.post('/orders', OrderController.store);
-routes.get('/orders', OrderController.index);
-routes.put('/orders/:id', OrderController.update);
-routes.delete('/orders/:id', OrderController.delete);
-
-routes.post('/files', upload.single('file'), FileController.store);
+routes.post('/deliverys', DeliveryController.store);
+routes.get('/deliverys', DeliveryController.index);
+routes.put('/deliverys/:id', DeliveryController.update);
+routes.delete('/deliverys/:id', DeliveryController.delete);
 
 export default routes;

@@ -1,25 +1,22 @@
-import Order from '../models/Order';
+import Delivery from '../models/Delivery';
 import Deliveryman from '../models/Deliveryman';
 import Recipient from '../models/Recipient';
 
-export default {
+class DeliveryPendingController {
     async index(req, res) {
-        // const { page = 1 } = req.query;
         const existDeli = await Deliveryman.findByPk(req.params.id);
 
         if (!existDeli) {
             return res.status(400).json({ error: 'Entregador não encontrado' });
         }
 
-        const response = await Order.findAll({
+        const response = await Delivery.findAll({
             where: {
                 deliveryman_id: req.params.id,
                 end_date: null,
                 canceled_at: null,
             },
             order: ['start_date'],
-            // limit: 10,
-            // offset: (page - 1) * 10,
             attributes: ['product', 'start_date'],
             include: [
                 {
@@ -39,5 +36,7 @@ export default {
         });
 
         return res.json(response);
-    },
-};
+    }
+}
+
+export default new DeliveryPendingController();

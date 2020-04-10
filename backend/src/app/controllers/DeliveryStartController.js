@@ -1,12 +1,24 @@
 import { startOfHour, parseISO, isBefore, isAfter } from 'date-fns';
-import Order from '../models/Order';
+import * as Yup from 'yup';
+import Delivery from '../models/Delivery';
 import Deliveryman from '../models/Deliveryman';
 
-export default {
+class DeliveryStartController {
     async store(req, res) {
+        const schema = Yup.object().shape({
+            start_date: Yup.string().required(),
+        });
+
+        if (!(await schema.isValid(req.body))) {
+            return res.status(400).json({ error: 'Falha na validação' });
+        }
+
         const { start_date } = req.body;
 
-        const existDeli = await Deliveryman.findByPk(req.params.id);
+        const delimanId = req.params.id;
+        const { deliveryId } = req.params;
+
+        const existDeli = await Deliveryman.findByPk(delimanId);
 
         if (!existDeli) {
             return res.status(400).json({ error: 'Entregador não encontrado' });
@@ -23,19 +35,21 @@ export default {
                 .json({ error: 'Horário de Retirada não permitido!' });
         }
 
-        const existOrder = await Order.findOne({
+        const existDelivery = await Delivery.findOne({
             where: {
-                id: req.params.orderId,
+                id: deliveryId,
                 start_date: null,
             },
         });
 
-        if (!existOrder) {
+        if (!existDelivery) {
             return res.status(401).json({ error: 'Encomenda não encontrada!' });
         }
 
-        await existOrder.update(req.body);
+        await existDelivery.update(req.body);
 
-        return res.json(existOrder);
-    },
-};
+        return res.json(existDelivery);
+    }
+}
+
+export default new DeliveryStartController();

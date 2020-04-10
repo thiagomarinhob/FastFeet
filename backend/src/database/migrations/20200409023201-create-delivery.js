@@ -1,6 +1,6 @@
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable('orders', {
+        return queryInterface.createTable('deliveries', {
             id: {
                 type: Sequelize.INTEGER,
                 autoIncrement: true,
@@ -23,7 +23,7 @@ module.exports = {
             },
             signature_id: {
                 type: Sequelize.INTEGER,
-                references: { model: 'signatures', key: 'id' },
+                references: { model: 'files', key: 'id' },
                 onUpdate: 'CASCADE',
                 onDelete: 'SET NULL',
             },
@@ -52,6 +52,6 @@ module.exports = {
     },
 
     down: (queryInterface) => {
-        return queryInterface.dropTable('orders');
+        return queryInterface.dropTable('deliveries');
     },
 };

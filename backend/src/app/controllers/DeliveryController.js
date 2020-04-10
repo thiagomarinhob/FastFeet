@@ -1,19 +1,20 @@
 import * as Yup from 'yup';
 
-import Order from '../models/Order';
+import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
 
-export default {
+class DeliveryController {
     async index(req, res) {
-        const response = await Order.findAll();
+        const response = await Delivery.findAll();
 
         if (!response) {
             return res.status(400).json({ error: 'Lista Vazia' });
         }
 
         return res.json(response);
-    },
+    }
+
     async store(req, res) {
         const schema = Yup.object().shape({
             recipient_id: Yup.number().required(),
@@ -43,14 +44,15 @@ export default {
                 .json({ error: 'Entregador não encontrado!' });
         }
 
-        const { product } = await Order.create(req.body);
+        const { product } = await Delivery.create(req.body);
 
         return res.json({
             recipient_id,
             deliveryman_id,
             product,
         });
-    },
+    }
+
     async update(req, res) {
         req.body.id = req.params.id;
 
@@ -65,16 +67,17 @@ export default {
             return res.status(400).json({ error: 'Falha na validação' });
         }
 
-        const existOrder = await Order.findByPk(req.params.id);
+        const existDelivery = await Delivery.findByPk(req.params.id);
 
-        if (!existOrder) {
+        if (!existDelivery) {
             return res.status(400).json({ error: 'Encomenda não encontrada!' });
         }
 
-        const response = await existOrder.update(req.body);
+        const response = await existDelivery.update(req.body);
 
         return res.json(response);
-    },
+    }
+
     async delete(req, res) {
         const schema = Yup.object().shape({
             id: Yup.number().required(),
@@ -84,14 +87,16 @@ export default {
             return res.status(400).json({ error: 'Falha na Validação' });
         }
 
-        const existOrder = await Order.findByPk(req.params.id);
+        const existDelivery = await Delivery.findByPk(req.params.id);
 
-        if (!existOrder) {
+        if (!existDelivery) {
             return res.status(400).json({ error: 'Encomenda nã encontrada!' });
         }
 
-        await existOrder.destroy(req.params.id);
+        await existDelivery.destroy(req.params.id);
 
         return res.status(204).send();
-    },
-};
+    }
+}
+
+export default new DeliveryController();

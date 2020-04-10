@@ -1,6 +1,6 @@
 import User from '../models/User';
 
-export default {
+class UserController {
     async store(req, res) {
         const userExist = await User.findOne({
             where: { email: req.body.email },
@@ -19,10 +19,13 @@ export default {
             name,
             email,
         });
-    },
+    }
+
     async index(req, res) {
         const users = await User.findAll();
 
         return res.json(users);
-    },
-};
+    }
+}
+
+export default new UserController();

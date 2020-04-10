@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import auth from '../../config/auth';
 import User from '../models/User';
 
-export default {
+class SessionController {
     async store(req, res) {
         const schema = Yup.object().shape({
             email: Yup.string().email().required(),
@@ -38,5 +38,7 @@ export default {
                 expiresIn: auth.expiresIn,
             }),
         });
-    },
-};
+    }
+}
+
+export default new SessionController();
