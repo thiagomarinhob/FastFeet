@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import Mail from '../../lib/Mail';
 
 import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
@@ -45,6 +46,12 @@ class DeliveryController {
         }
 
         const { product } = await Delivery.create(req.body);
+
+        await Mail.sendMail({
+            to: `${checkDeliveryman.name} <${checkDeliveryman.email}>`,
+            subject: `Nova Encomenda Cadastrada!`,
+            text: 'Você tem uma nova encomenda',
+        });
 
         return res.json({
             recipient_id,
