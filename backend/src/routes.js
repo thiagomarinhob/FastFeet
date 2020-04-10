@@ -12,6 +12,8 @@ import DeliveryPendingController from './app/controllers/DeliveryPendingControll
 import DeliveryCompletedController from './app/controllers/DeliveryCompletedController';
 import DeliveryStartController from './app/controllers/DeliveryStartController';
 import DeliveryFinishController from './app/controllers/DeliveryFinishController';
+import DeliveryProblemController from './app/controllers/DeliveryProblemController';
+import DeliveryIdProblemController from './app/controllers/DeliveryIdProblemController';
 
 import authMiddleware from './app/middleware/auth';
 
@@ -34,6 +36,8 @@ routes.post(
     DeliveryFinishController.store
 );
 
+routes.post('/delivery/:id/problems', DeliveryIdProblemController.store);
+
 routes.post('/files', upload.single('file'), FileController.store);
 
 routes.use(authMiddleware);
@@ -47,9 +51,13 @@ routes.put('/deliverymans/:id', DeliverymanController.update);
 routes.get('/deliverymans', DeliverymanController.index);
 routes.delete('/deliverymans/:id', DeliverymanController.delete);
 
-routes.post('/deliverys', DeliveryController.store);
-routes.get('/deliverys', DeliveryController.index);
-routes.put('/deliverys/:id', DeliveryController.update);
-routes.delete('/deliverys/:id', DeliveryController.delete);
+routes.post('/deliveries', DeliveryController.store);
+routes.get('/deliveries', DeliveryController.index);
+routes.put('/deliveries/:id', DeliveryController.update);
+routes.delete('/deliveries/:id', DeliveryController.delete);
+
+routes.get('/deliveries/problems', DeliveryProblemController.index);
+
+routes.get('/delivery/:id/problems', DeliveryIdProblemController.index);
 
 export default routes;
